@@ -44,7 +44,7 @@ async function main(n, msg){
 		service:'gmail',
 		auth: {
 		  user: 'hellomegha9673@gmail.com', 
-		  pass: 'PAV4@bhaji'
+		  pass: ''
 		}
 		});
 		console.log(email)
@@ -79,7 +79,7 @@ async function patient_mail(n){
 		service:'gmail',
 		auth: {
 		  user: 'megha9673@gmail.com', 
-		  pass: 'm12e4g6h7a2'
+		  pass: ''
 		}
 	});
 
