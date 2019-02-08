@@ -1,0 +1,201 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Scheduler App
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /home:
+    get:
+      operationId: "hello"
+      responses:
+        200:
+          description: "home"
+        400:
+         description: "Error"
+  /api/register/doctor:
+    post:
+      tags:
+      - "Doctor"
+      summary: "Add a new doctor to database"
+      description: ""
+      operationId: "add_doc"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+        - name: "data"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/Doctor"
+          
+      responses:
+        200:
+          description: "successful registration"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Patient"
+        400:
+          description: "Doctor already exists"
+  /api/register/patient:
+    post:
+      tags:
+      - "Patient"
+      summary: "Register patient"
+      description: ""
+      operationId: "add_patient"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+        - name: "data"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/Patient"
+      responses:
+        200:
+          description: "successful registration"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Patient"
+        400:
+          description: "Patient already exists"
+  /api/consult:
+    post:
+      tags:
+      - "Consult"
+      summary: "patient consults doctor"
+      operationId: "consult"
+      description: ""
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "status"
+        in: "query"
+        description: "Doctor id and patient id"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "available"
+          - "pending"
+          - "sold"
+          default: "available"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Consult"
+        400:
+          description: "Invalid status value"
+  /api/feedback:
+    post:
+      tags:
+      - "Consult"
+      summary: "fill feedback form"
+      operationId: "feedback"
+      description: ""
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "status"
+        in: "query"
+        description: "Feedback response submitted by patient"
+        required: true
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "available"
+          - "pending"
+          - "sold"
+          default: "available"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid status value" 
+# complex objects have schema definitions
+definitions:
+  Doctor:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      phone:
+        type: "string"
+        description: "Doctor Status"
+    xml:
+      name: "Doctor"
+  Patient:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      phone:
+        type: "string"
+    xml:
+      name: "Patient"  
+  Consult:
+    type: "object"
+    properties: 
+      id:
+        type: "integer"
+        format: "int64"
+      d_id:
+        type: "integer"
+        format: "int64"
+      p_id:
+        type: "integer"
+        format: "int64"
+      consult_date:
+        type: "string"
+        default: "Date.now()"
+      feedback_status:
+        type: "integer"
+        format: "int64"
